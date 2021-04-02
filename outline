@@ -1,7 +1,7 @@
 The goal if this project is to create a restful service which can be used to add, update, remove, limit, synchronize, cache and control access to log 
 information lookup data.
 
-The service will also allow for basic search transformations such as cidr matching, soundex and others.  
+The service will also allow for basic search transformations such as cidr matching, MAC address prefix matching, soundex and others.  
 In addition the output can be set to different formats such as CSV, JSON, geojson, KML ...etc
 
 Example operations:
