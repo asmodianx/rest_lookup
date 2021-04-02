@@ -1,0 +1,41 @@
+The goal if this project is to create a restful service which can be used to add, update, remove, limit, synchronize, cache and control access to log 
+information lookup data.
+
+The service will also allow for basic search transformations such as cidr matching, soundex and others.  
+In addition the output can be set to different formats such as CSV, JSON, geojson, KML ...etc
+
+Example operations:
+GET
+* graylog configured to access http rest service http://example.com/lookup/lookup.php?UUID=34f54b98-7f09-4d59-bfc6-5ad0b4b04d4e?key=192.0.2.1
+* rest_lookup looks at a profile for the UUID and finds its a rate limited public lookup using a cidr transform and with output set to json
+** other options would be a get or header variable containing an API key or other authentication tactic.
+* rest_lookup sees that that IP's last access timestamp was 15 seconds ago and in the last minute has 3 queries and is rate limite to 4 queries per minute
+* rest_lookup looks up the dataset which is a csv file
+* restlookup checks to see if this csv is cached if not loads it into cache
+* reslookup searches the index column using the CIDR transform and returns matches in json format
+* restlookup runs a cleanup operation to remove stale cached items (or scheduled task
+* the client receives the output and closes the connection
+
+GET - dump
+* client requests a dump of a dataset with an admin api in json format
+
+PUT
+* Remote client submits a CSV formated lookup file which contains multiple columns of data including latitude and longitude to rest_lookup with an administrative api_key
+* The submission specifies header or get variables stating the output is to be KML, the search column is plain text located in a column called "BUILDINGS" and that the 
+lookup is not rate limited but is limited to hosts on a spicific internal network 192.168.0.0/24
+* the datafile is parsed and inserted into a new database table
+* rest_lookup accepts the admin api and generates a UUID and apikey for the new data set,  sets the restrictions and output KML (as points) and returns the url containing the UUID and the API key to access the content.
+
+UPDATE
+* A client using the administrative API key sends an updated dataset to a UUID
+* rest_lookup drops the table and re-creates it with the new dataset
+
+UPDATE - restriction
+* admin api request updates restrictions on a UUID, add block or allow list, add new api, remove old api, set api expiration date, add/modify/delete rate control
+
+
+DELETE
+* A client using the administrative API key sends a request specifying a UUID to disable by default or with a boolean header flag to delete.
+
+
+
